@@ -1,5 +1,3 @@
-package com.github.dkartaschew;
-
 /*-
  * Copyright 2019, Darran Kartaschew.
  *
@@ -16,6 +14,8 @@ package com.github.dkartaschew;
  * limitations under the License.
  */
 
+package com.github.dkartaschew;
+
 import java.io.File;
 
 import org.apache.maven.plugins.annotations.Parameter;
@@ -25,33 +25,72 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 public class ArtifactDefinition {
 
+	/**
+	 * The JAR File to update
+	 */
 	@Parameter
 	private File jarFile;
 
+	/**
+	 * The name of the artifact located in the local maven repository. This should
+	 * be in Apache Buildr format.
+	 */
 	@Parameter
 	private String artifact;
 
+	/**
+	 * The name of the manifest file to use as the source to update.
+	 */
 	@Parameter(required = true)
 	private File manifestFile;
 
+	/**
+	 * The update mode. (either {@code merge} or {@code overwrite}).
+	 */
 	@Parameter(defaultValue = "merge")
 	private String mode;
 
+	/**
+	 * Flag to indicate if to republish an artifact back to the local maven
+	 * repository.
+	 */
 	@Parameter(defaultValue = "false")
 	private boolean publishArtifact;
 
+	/**
+	 * The name of the JAR File to update.
+	 * 
+	 * @return The name of the JAR File to update or {@code null} if not set.
+	 */
 	public File getJarFile() {
 		return jarFile;
 	}
 
+	/**
+	 * Set the name of the JAR File to update.
+	 * 
+	 * @param jarFile The name of the JAR File to update, or {@code null} to unset.
+	 */
 	public void setJarFile(File jarFile) {
 		this.jarFile = jarFile;
 	}
 
+	/**
+	 * Get the name of the artifact to update.
+	 * 
+	 * @return The name of the artifact to update.
+	 */
 	public String getArtifact() {
 		return artifact;
 	}
 
+	/**
+	 * Set the name of the artifact to update.
+	 * <p>
+	 * This method does <b>not</b> verify artifact
+	 * 
+	 * @param artifact The name of the artifact to update.
+	 */
 	public void setArtifact(String artifact) {
 		this.artifact = artifact;
 	}
@@ -65,7 +104,7 @@ public class ArtifactDefinition {
 	}
 
 	public String getMode() {
-		if(mode == null) {
+		if (mode == null) {
 			return "merge";
 		}
 		return mode;
