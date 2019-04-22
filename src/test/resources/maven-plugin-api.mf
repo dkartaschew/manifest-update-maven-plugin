@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Built-By: Overwrite Entry
+Bundle-Version: 3.5.0
