@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.dkartaschew</groupId>
+	<artifactId>manifest-update-maven-plugin-test</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.dkartaschew</groupId>
+				<artifactId>manifest-update-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>package</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifacts>
+						<artifact>
+							<publishArtifact>false</publishArtifact>
+							<artifact>org.apache.maven:maven-plugin-api:3.5.0</artifact>
+							<manifestFile>maven-plugin-api.mf</manifestFile>
+							<mode>merge</mode>
+						</artifact>
+					</artifacts>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

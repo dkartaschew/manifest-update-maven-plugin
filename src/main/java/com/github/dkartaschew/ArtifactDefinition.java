@@ -65,6 +65,9 @@ public class ArtifactDefinition {
 	}
 
 	public String getMode() {
+		if(mode == null) {
+			return "merge";
+		}
 		return mode;
 	}
 

@@ -118,6 +118,8 @@ public class PackageMOJO extends AbstractMojo {
 
 			// Now create a new output file and copy the contents over.
 			outFile = outputDirectory.toPath().resolve(zipFile.getFileName());
+			// Ensure the target location exists...
+			Files.createDirectories(outputDirectory.toPath());
 			try (ZipOutputStream outZipContainer = new ZipOutputStream(new FileOutputStream(outFile.toFile()))) {
 				if (jarFile.getComment() != null) {
 					outZipContainer.setComment(jarFile.getComment());

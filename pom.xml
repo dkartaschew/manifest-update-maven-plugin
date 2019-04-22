@@ -5,7 +5,7 @@
 	<groupId>com.github.dkartaschew</groupId>
 	<artifactId>manifest-update-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>manifest-update-maven-plugin Maven Mojo</name>
 	<url>http://maven.apache.org</url>
 	<description>Maven Plugin to update a Manifest in an existing JAR file or Artifact in a local maven repository</description>
