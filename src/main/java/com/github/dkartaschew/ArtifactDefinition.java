@@ -84,7 +84,7 @@ public class ArtifactDefinition {
 	}
 
 	public boolean isValidState() {
-		return jarFile != null || (artifact != null && !artifact.isBlank());
+		return jarFile != null || (artifact != null && !artifact.trim().isEmpty());
 	}
 
 	@Override
