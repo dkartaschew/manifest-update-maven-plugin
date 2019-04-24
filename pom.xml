@@ -6,9 +6,9 @@
 	<artifactId>manifest-update-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<version>1.0.0</version>
-	<name>manifest-update-maven-plugin Maven Mojo</name>
-	<url>http://maven.apache.org</url>
-	<description>Maven Plugin to update a Manifest in an existing JAR file or Artifact in a local maven repository</description>
+	<name>Manifest Update Maven Mojo</name>
+	<url>https://github.com/dkartaschew/manifest-update-maven-plugin</url>
+	<description>Maven Plugin to update a Manifest in an existing JAR file or Artifact in a local maven repository.</description>
 	<inceptionYear>2019</inceptionYear>
 	<licenses>
 		<license>
@@ -18,22 +18,85 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+	<organization>
+		<name>DKaratschew @ Github</name>
+		<url>https://github.com/dkartaschew</url>
+	</organization>
+	<scm>
+		<url>https://github.com/dkartaschew/manifest-update-maven-plugin</url>
+		<developerConnection>dkartaschew</developerConnection>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/dkartaschew/manifest-update-maven-plugin/issues</url>
+		<system>Github</system>
+	</issueManagement>
+	<prerequisites>
+	</prerequisites>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-docck-plugin</artifactId>
+				<version>1.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+				</configuration>
+				<executions>
+					<execution>
+						<id>mojo-descriptor</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>descriptor</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.5.0</version>
+			<version>3.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.4</version>
+			<version>3.6.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
