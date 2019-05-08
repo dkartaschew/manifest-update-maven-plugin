@@ -45,7 +45,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Rebuilds each manifest
+ * Rebuild defined artifacts or JARs, updating the included manifest with
+ * details from the provided supplemental manifest.
  */
 @Mojo(name = "package", defaultPhase = LifecyclePhase.PACKAGE)
 public class PackageMOJO extends AbstractMojo {
@@ -58,17 +59,76 @@ public class PackageMOJO extends AbstractMojo {
 	/**
 	 * Target location to store files.
 	 */
-	@Parameter(defaultValue = "${project.build.directory}", required = true)
+	@Parameter(defaultValue = "${project.build.directory}")
 	private File outputDirectory;
 
+	/**
+	 * The location of the local maven repository.
+	 */
 	@Parameter(defaultValue = "${settings.localRepository}")
 	private File localRepository;
 
-	@Parameter
+	/**
+	 * List of all artifacts/JAR files to update.
+	 * <p>
+	 * Each artifact <b>must</b> define either a local maven artifact
+	 * ({@code artifact}) or a JAR File ({@code jarFile}) and a supplemental
+	 * manifest file.
+	 * <p>
+	 * Artifact is defined as:
+	 * 
+	 * <pre>
+&lt;artifacts&gt;
+&lt;artifact&gt;
+&nbsp;&nbsp;&lt;artifact&gt;org.apache.maven:maven-plugin-api:3.5.0&lt;/artifact&gt;
+&nbsp;&nbsp;&lt;jarFile&gt;org.apache.maven.maven-plugin-api-3.5.0.jar&lt;/jarFile&gt;
+&nbsp;&nbsp;&lt;manifestFile&gt;src/manifests/maven-plugin-api.mf&lt;/manifestFile&gt;
+&nbsp;&nbsp;&lt;mode&gt;merge&lt;/mode&gt;
+&nbsp;&nbsp;&lt;publishArtifact&gt;false&lt;/publishArtifact&gt;
+&lt;/artifact&gt;
+...
+&lt;/artifacts&gt;
+	 * </pre>
+	 * <p>
+	 * {@code artifact} defines a JAR file located in the local maven repository. The
+	 * format definition uses Apache Buildr notation. (This is effectively
+	 * {@code groupId:artifactId:version}).
+	 * <p>
+	 * {@code jarFile} defines a local JAR file.
+	 * <p>
+	 * {@code manifestFile} defines the supplemental manifest file that will
+	 * update the manifest in the JAR file. The provided manifest file must
+	 * conform to the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Manifest">JAR Manifest specification</a>.
+	 * <p>
+	 * {@code mode} and {@code publishArtifact} are optional.
+	 * <p>
+	 * {@code mode} can be set to "merge" or "overwrite". "merge" will instruct
+	 * the plugin to merge the contents of the original and supplement manifest, and
+	 * "overwrite" will replace the original with the supplement manifest. 
+	 * (Defaults to "merge"). 
+	 * <p>
+	 * {@code publishArtifact} can be set to "true" or "false". This setting
+	 * instructs the plugin to republish an updated JAR back into the local
+	 * maven repository post processing. This setting has no effect if
+	 * the JAR file being updated did not originate from the local maven 
+	 * repository. (Defaults to "false").
+	 */
+	@Parameter(required = true)
 	private List<ArtifactDefinition> artifacts;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		/*
+		 * Check to ensure we have something to work on, if not, give a warning.
+		 */
+		if (artifacts == null || artifacts.isEmpty()) {
+			getLog().warn("No artifacts defined, skipping...");
+			return;
+		}
+		/*
+		 * Process each element, skipping Signed JAR, otherwise throw appropriate
+		 * exception.
+		 */
 		for (ArtifactDefinition def : artifacts) {
 			try {
 				process(def);
@@ -93,6 +153,7 @@ public class PackageMOJO extends AbstractMojo {
 	 * @throws IllegalStateException The definition is invalid.
 	 */
 	void process(ArtifactDefinition def) throws IOException, SignedJARException, IllegalStateException {
+		// Validate input.
 		if (def == null) {
 			throw new IllegalStateException("Missing definition");
 		}
@@ -102,15 +163,21 @@ public class PackageMOJO extends AbstractMojo {
 		if (def.getManifestFile() == null) {
 			throw new IllegalStateException("Missing manifest definition");
 		}
+
+		// Load the new manifest
 		Manifest newManifest;
 		try (FileInputStream input = new FileInputStream(def.getManifestFile())) {
 			newManifest = new Manifest(input);
 		}
+
+		// Start by copying the contents...
 		Path zipFile;
 		Path outFile;
 		try (JarFile jarFile = getSourceFile(def)) {
 			zipFile = Paths.get(jarFile.getName());
 			getLog().info("Processing : " + zipFile.toString());
+
+			// Check the existing manifest for signed jar entries.
 			Manifest jarFileManifest = jarFile.getManifest();
 			if (!jarFileManifest.getEntries().isEmpty()) {
 				throw new SignedJARException(zipFile.getFileName().toString() + " appears to be signed, skipping.");
@@ -262,26 +329,56 @@ public class PackageMOJO extends AbstractMojo {
 		return sb.toString();
 	}
 
+	/**
+	 * Get the output/target directory
+	 * 
+	 * @return The output directory.
+	 */
 	File getOutputDirectory() {
 		return outputDirectory;
 	}
 
+	/**
+	 * Set the output/target directory
+	 * 
+	 * @param outputDirectory The output directory to use.
+	 */
 	void setOutputDirectory(File outputDirectory) {
 		this.outputDirectory = outputDirectory;
 	}
 
+	/**
+	 * Get the local maven repository location
+	 * 
+	 * @return The local maven repository location
+	 */
 	File getLocalRepository() {
 		return localRepository;
 	}
 
+	/**
+	 * Set the local maven repository location
+	 * 
+	 * @param localRepository The local maven repository location
+	 */
 	void setLocalRepository(File localRepository) {
 		this.localRepository = localRepository;
 	}
 
+	/**
+	 * Get a list of artifacts to update
+	 * 
+	 * @return The list of artifacts to update.
+	 */
 	List<ArtifactDefinition> getArtifacts() {
 		return artifacts;
 	}
 
+	/**
+	 * Set the list of artifacts to update
+	 * 
+	 * @param artifacts The list of items to update
+	 */
 	void setArtifacts(List<ArtifactDefinition> artifacts) {
 		this.artifacts = artifacts;
 	}

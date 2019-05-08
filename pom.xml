@@ -6,7 +6,7 @@
 	<artifactId>manifest-update-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<version>1.0.0</version>
-	<name>Manifest Update Maven Mojo</name>
+	<name>Manifest Update Maven Plugin</name>
 	<url>https://github.com/dkartaschew/manifest-update-maven-plugin</url>
 	<description>Maven Plugin to update a Manifest in an existing JAR file or Artifact in a local maven repository.</description>
 	<inceptionYear>2019</inceptionYear>
@@ -18,6 +18,9 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
 	<organization>
 		<name>DKartaschew @ Github</name>
 		<url>https://github.com/dkartaschew</url>
@@ -32,8 +35,6 @@
 		<url>https://github.com/dkartaschew/manifest-update-maven-plugin/issues</url>
 		<system>Github</system>
 	</issueManagement>
-	<prerequisites>
-	</prerequisites>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -50,7 +51,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
+				<version>3.0.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -68,6 +69,12 @@
 							<goal>descriptor</goal>
 						</goals>
 						<phase>process-classes</phase>
+					</execution>
+					<execution>
+						<id>generated-helpmojo</id>
+						<goals>
+							<goal>helpmojo</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -88,6 +95,11 @@
 				<version>3.0.0</version>
 				<configuration>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.6.0</version>
 			</plugin>
 		</plugins>
 	</reporting>

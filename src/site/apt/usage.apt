@@ -1,0 +1,92 @@
+ ------
+ Usage
+ ------
+ Darran Kartaschew
+ ------
+ 2019-05-03
+ ------
+
+Usage
+
+  The Manifest Update Maven Plugin is used to update the Manifest in an existing JAR File.
+  Its goal is bound to the <<<package>>> in the build life cycle.
+
+* The <<<manifest-update-maven-plugin:package>>> Goal
+
+  This goal will process any defined artifacts, updating the manifest contained in the artifact as defined.
+
+* Configuring Your Plugin
+
+  In the <<<pom.xml>>> file, configure the plugin:
+
++-------------------------------+
+<build>
+  <plugins>
+    <plugin>
+      <groupId>com.github.dkartaschew</groupId>
+      <artifactId>manifest-update-maven-plugin</artifactId>
+      <version>1.0.0</version>
+      <executions>
+        <execution>
+          <phase>package</phase>
+          <goals>
+            <goal>package</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
+        <artifacts>
+          <artifact>
+            <publishArtifact>false</publishArtifact>
+            <artifact>org.apache.maven:maven-plugin-api:3.5.0</artifact>
+            <manifestFile>maven-plugin-api.mf</manifestFile>
+            <mode>merge</mode>
+          </artifact>
+        </artifacts>
+      </configuration>
+    </plugin>
+    ...
+  </plugins>
+</build>
++-------------------------------+
+
+  The above example will tie the execution to <<<package:package>>> allowing you
+  to simply run:
+  
++-------------------------------+
+ mvn package                   
++-------------------------------+
+  
+  
+  The configuration takes are collection of <<<artifact>>> in <<<artifacts>>>.
+  
+  The available parameters for each artifact are:
+  
+  [[1]] <<jarFile>> - A local JAR file to update. The location of this file is relative
+  to the pom file.
+  
+  [[2]] <<artifact>> - A local JAR file located in the local maven repository. 
+  The format definition uses Apache Buildr notation. (This is effectively
+  <<<groupId:artifactId:version>>>).
+  
+  [[3]] <<manifestFile>> - defines the supplemental manifest file that will
+  update the manifest in the JAR file. The provided manifest file must
+  conform to the JAR Manifest specification. The location of this file is relative
+  to the pom file.
+  
+  [[4]] <<mode>> - The mode to update the manifest in the JAR file, This will
+  either be <<<merge>>> to merge the contents, or <<<overwrite>>> to replace
+  the contents.
+  
+  [[5]] <<publishArtifact>> - can be set to <<<true>>> or <<<false>>>. This setting
+  instructs the plugin to republish an updated JAR back into the local
+  maven repository post processing. This setting has no effect if
+  the JAR file being updated did not originate from the local maven 
+  repository. (Defaults to <<<false>>>).
+
+  []
+
+  The default is to not publish artifacts back into the local maven
+  repository if the source is obtained from this source.
+  
+  

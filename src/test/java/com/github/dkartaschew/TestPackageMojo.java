@@ -30,6 +30,9 @@ import java.util.jar.Manifest;
 
 import org.junit.Test;
 
+/**
+ * Primary unit test
+ */
 public class TestPackageMojo {
 
 	private final Path TMP = Paths.get(System.getProperty("java.io.tmpdir"));

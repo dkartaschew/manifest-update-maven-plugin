@@ -85,7 +85,8 @@ public class ArtifactDefinition {
 	}
 
 	/**
-	 * Set the name of the artifact to update.
+	 * Set the name of the artifact to update. This name should be in apache buildr
+	 * format. (groupId:artifactId:version).
 	 * <p>
 	 * This method does <b>not</b> verify artifact
 	 * 
@@ -95,14 +96,30 @@ public class ArtifactDefinition {
 		this.artifact = artifact;
 	}
 
+	/**
+	 * Get the manifest file that will be used as the source to update the manifest
+	 * in the JAR/artifact.
+	 * 
+	 * @return The manifest file.
+	 */
 	public File getManifestFile() {
 		return manifestFile;
 	}
 
+	/**
+	 * Set the manifest file that will be used as the source to update the manifest.
+	 * 
+	 * @param manifestFile The file.
+	 */
 	public void setManifestFile(File manifestFile) {
 		this.manifestFile = manifestFile;
 	}
 
+	/**
+	 * Get the update mode.
+	 * 
+	 * @return The update mode.
+	 */
 	public String getMode() {
 		if (mode == null) {
 			return "merge";
@@ -110,18 +127,42 @@ public class ArtifactDefinition {
 		return mode;
 	}
 
+	/**
+	 * Set the update mode.
+	 * 
+	 * @param mode The update mode, or {@code null} to reset to default.
+	 */
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
 
+	/**
+	 * Should the result be published back into the local maven repository.
+	 * 
+	 * @return TRUE if the updated artifact should be published.
+	 */
 	boolean isPublishArtifact() {
 		return publishArtifact;
 	}
 
+	/**
+	 * Set if the artifact that was updated should be published back into the local
+	 * maven repository.
+	 * 
+	 * @param publishArtifact TRUE to publish.
+	 */
 	void setPublishArtifact(boolean publishArtifact) {
 		this.publishArtifact = publishArtifact;
 	}
 
+	/**
+	 * Does this artifact have enough information to proceed.
+	 * <p>
+	 * This method does not check to see if items set are accessibly/readable/valid,
+	 * just that values have been set.
+	 * 
+	 * @return TRYE if all required values have been set.
+	 */
 	public boolean isValidState() {
 		return jarFile != null || (artifact != null && !artifact.trim().isEmpty());
 	}

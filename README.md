@@ -1,4 +1,4 @@
-# Java Manifest Update Plugin
+# Java Manifest Update Maven Plugin
 
 A simple maven plugin to update a JAR manifest in an
 existing JAR or artifact located in a local maven
@@ -18,34 +18,34 @@ In the POM use:
 
 ```
 <build>
-		<plugins>
-			<plugin>
-				<groupId>com.github.dkartaschew</groupId>
-				<artifactId>manifest-update-maven-plugin</artifactId>
-				<version>1.0.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>package</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<artifacts>
-						<artifact>
-							<publishArtifact>false</publishArtifact>
-							<artifact>org.apache.maven:maven-plugin-api:3.5.0</artifact>
-							<manifestFile>maven-plugin-api.mf</manifestFile>
-							<mode>merge</mode>
-						</artifact>
-						...
-					</artifacts>
-				</configuration>
-			</plugin>
-			...
-		</plugins>
-	</build>
+  <plugins>
+    <plugin>
+      <groupId>com.github.dkartaschew</groupId>
+      <artifactId>manifest-update-maven-plugin</artifactId>
+      <version>1.0.0</version>
+      <executions>
+        <execution>
+          <phase>package</phase>
+          <goals>
+            <goal>package</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
+        <artifacts>
+          <artifact>
+            <publishArtifact>false</publishArtifact>
+            <artifact>org.apache.maven:maven-plugin-api:3.5.0</artifact>
+            <manifestFile>maven-plugin-api.mf</manifestFile>
+            <mode>merge</mode>
+          </artifact>
+          ...
+        </artifacts>
+      </configuration>
+    </plugin>
+    ...
+  </plugins>
+</build>
 ```
 
 This will bind the action to the package:package phase.
